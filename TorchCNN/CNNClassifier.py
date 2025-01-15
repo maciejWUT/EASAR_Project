@@ -13,7 +13,8 @@ class CNNClassifier(pl.LightningModule):
         self.lr = 0.001
         self.size = (20, 96)
         self.sigma = 3.3
-        self.metrics = Metrics(36).to(device = self.device)
+        self.out_features = model.out_features
+        self.metrics = Metrics(self.out_features).to(device = self.device)
         self.loss_fn = nn.CrossEntropyLoss()
 
     def forward(self, x):

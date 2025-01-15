@@ -44,11 +44,24 @@ class InitializeDataset():
 
         random.shuffle(self.x)
 
-    def split_dataset(self, validation_percentage, testing_percentage):
+    def split_dataset(self, validation_percentage, testing_percentage, other_test_only):
+        if "other" in self.one_hot_dict:
+            accepted_words = [key for key in self.one_hot_dict if key != "other"]
+        else:
+            accepted_words = [key for key in self.one_hot_dict]
+            other_test_only = []
+
         for item in self.x:
-            subset = self.which_set(item, validation_percentage, testing_percentage)
             label = item.split(os.sep)[2]
-            one_hot = self.one_hot_dict[label]
+            if label in other_test_only:
+                subset = "testing"
+            else:
+                subset = self.which_set(item, validation_percentage, testing_percentage)
+
+            if label in self.one_hot_dict:
+                one_hot = self.one_hot_dict[label]
+            else:
+                one_hot = self.one_hot_dict["other"]
             if subset == 'training':
                 self.x_train.append(item)
                 self.y_train.append(one_hot)
