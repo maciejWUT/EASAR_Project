@@ -53,7 +53,9 @@ class CNNClassifier(pl.LightningModule):
         self.log('test_loss', loss, prog_bar=True)
 
     def on_test_epoch_end(self) -> None:
-        pass
+        results = self.metrics.compute()
+        self.log("test_mean_acc", results["mean_accuracy"], prog_bar=True)
+        self.metrics.reset()
 
 
 
